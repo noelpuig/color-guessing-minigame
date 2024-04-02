@@ -13,7 +13,8 @@ window.onload = () => {
     pickerVisible(false);
 }
 
-function updateCanvasDim () {
+function updateCanvasDim () { 
+    // Updates the dimension of the canvases and redraws them
     var rect = cpicker.getBoundingClientRect();
     cpicker.width = rect.width;
     cpicker.height = rect.height;
@@ -25,17 +26,20 @@ function updateCanvasDim () {
 }
 
 function moveColorSelector (x) {
+    // Moves the selector indicator to a position
     const cselector = document.getElementById("color-selector");
     cselector.style.left = x + "px";
 }
 
 function moveValueSelector (x, y) {
+    // Moves the selector indicator to a position
     const vselector = document.getElementById("value-selector");
     vselector.style.left = x + "px";
     vselector.style.top = y + "px";
 }
 
 function drawColorPicker () {
+    // Draws the color picker's background
     const ctx = cpicker.getContext("2d");
     const maxx = cpicker.width;
     const maxy = cpicker.height;
@@ -50,6 +54,7 @@ function drawColorPicker () {
 }
 
 function updateVPicker (col) {
+    // Draws the value/saturation picker's background
     const vctx = vpicker.getContext("2d");
     const maxx = vpicker.width;
     const maxy = vpicker.height;
@@ -65,7 +70,7 @@ function updateVPicker (col) {
 }
 
 function pickerVisible (visible) {
-    // Remove color pickers
+    // Hides or shows color pickers
     const c_container = document.getElementById("cpicker-container");
     const v_container = document.getElementById("vpicker-container");
     if (visible) { 
@@ -82,9 +87,11 @@ function pickerVisible (visible) {
 }
 
 const play = () => {
-    // Remove title & play button
+    // Don't play twice
     if (playing) return;
     playing = true;
+
+    // Resets colors and disables title and play button
     button.style.opacity = 0;
     button.disabled = true;
     const title = document.getElementById("title");
@@ -92,7 +99,7 @@ const play = () => {
     color.style.backgroundColor = "hsl(211,79%,50%)";
     pickerVisible(false);
 
-    // Play countdown
+    // Play start countdown
     const container = document.getElementById("count");
     let i = 5;
     let countdown = setInterval(() => {
@@ -104,23 +111,24 @@ const play = () => {
         }
     }, 1000);
 
+    // Wait for countdown to finish
     setTimeout(() => {
         container.innerHTML = "<h1>Guess the color</h1>";
 
-        // Show random color
+        // Create and show random color
         let h = (Math.random() * 360).toFixed(2);
         let s = (Math.random() * 100).toFixed(2);
         let l = (Math.random() * 100).toFixed(2);  
         color.style.backgroundColor = `hsl(${h} ${s}% ${l}%)`;
 
-        pickerVisible(true);
-
         // Reset pickers
+        pickerVisible(true);
         const color_dx = drawColorPicker();
         const [v_dx, v_dy] = updateVPicker(0);
         moveColorSelector(0);
         moveValueSelector(0, 0);
 
+        // Let user choose it's color guess
         var userH = 0;
         var userS = 0;
         var userL = 100;
@@ -140,6 +148,7 @@ const play = () => {
         cpicker.addEventListener("mousedown", cHandler, true);
         vpicker.addEventListener("mousedown", vHandler, true);        
 
+        // Countdown while the user picks
         let i = 10;
         let countdown = setInterval(() => {
             title.innerText = i;
@@ -151,15 +160,22 @@ const play = () => {
         }, 1000);
 
         setTimeout(() => {
+            // Removes color picker listeners
             cpicker.removeEventListener("mousedown", cHandler, true);
             vpicker.removeEventListener("mousedown", vHandler, true);
+
+            // Calculates score
             const correctH = (1 - Math.abs(userH - h)/360) * 100;
             const correctS = 100 - Math.abs(userS - s);
             const correctL = 100 - Math.abs(userL - l);
             console.log("HSL individual percentages: ", correctH, correctS, correctL);
             const score = (correctH + correctS + correctL) / 3;
+
+            // Displays score
             color.style.background = `linear-gradient(90deg, hsl(${h} ${s}% ${l}%) 49.8%, hsl(${Math.round(userH)} ${Math.round(userS)}% ${Math.round(userL)}%) 50.2%)`;
             title.innerText = `Score: ${score.toFixed(2)}%`;
+
+            // Resets text and play button
             button.style.opacity = 100;
             button.disabled = false;
             button.innerText = "Play agian?";
