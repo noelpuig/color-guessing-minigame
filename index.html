@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Juego reto 1</title>
+</head>
+<body>
+    <header class="header"><p class="name">Noel Puig</p></header>
+    <div class="game" style="background-color: hsl(211,79%,50%);" id="game">
+        <h1 id="title">Color game</h1>
+        <button class="play-btn" id="play-btn">Play!</button>
+        <div id="count"></div>
+    </div>
+    <div id="container-picker">
+        <div class="value-picker" id="vpicker-container">
+            <canvas id="value-picker"></canvas>
+            <div id="value-selector"></div>
+        </div>
+
+        <div class="color-picker" id="cpicker-container">
+            <canvas id="color-picker"></canvas>
+            <div id="color-selector"></div>
+        </div>
+    </div>
+    <script  src="game.js"></script>
+</body>
+</html>
